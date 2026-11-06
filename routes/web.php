@@ -12,6 +12,10 @@ use App\Http\Controllers\DashboardController;
 
 use App\Http\Controllers\PelangganController;
 
+use App\Http\Controllers\UserController;
+
+Route::resource('user', UserController::class);
+
 Route::resource('pelanggan', PelangganController::class);
 
 Route::get('dashboard', [DashboardController::class, 'index'])
