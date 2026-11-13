@@ -1,22 +1,16 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Models\User;
-
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $data['dataUser'] = User::all();
-		return view('admin.user.index',$data);
+        return view('admin.user.index', $data);
     }
 
     /**
@@ -25,7 +19,6 @@ class UserController extends Controller
     public function create()
     {
         return view('admin.user.create');
-        $data['password'] = Hash::make($request->password);
     }
 
     /**
@@ -33,18 +26,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
+        // dd($request->all());
 
-        $data['first_name'] = $request->first_name;
-		$data['last_name'] = $request->last_name;
-		$data['birthday'] = $request->birthday;
-		$data['gender'] = $request->gender;
-		$data['email'] = $request->email;
-		$data['phone'] = $request->phone;
-		
-		User::create($data);
-		
-		return redirect()->route('user.index')->with('success','Penambahan Data Berhasil!');
+        $data['name'] = $request->name;
+        $data['email']  = $request->email;
+        $data['password'] = Hash::make($request->password);
+
+
+        User::create($data);
+
+        return redirect()->route('user.index')->with('success', 'Penambahan Data Berhasil!');
     }
 
     /**
@@ -67,21 +58,18 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id){
-        {
-            $user_id = $id;
-            $user = User::findOrFail($user_id);
+    public function update(Request $request, string $id)
+    {
+        $user_id = $id;
+        $user    = User::findOrFail($id);
 
-            $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
-            $user->birthday = $request->birthday;
-            $user->gender = $request->gender;
-            $user->email = $request->email;
-            $user->phone = $request->phone;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
 
-            $user->save();
-            return redirect()->route('user.index')->with('success','Perubahan Data Berhasil!');
-        }
+        $user->save();
+
+        return redirect()->route('user.index')->with('success', 'Data Berhasil Diubah!');
     }
 
     /**
@@ -89,9 +77,9 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        $user = user::findOrFail($id);
-
+        $user = User::findOrFail($id);
         $user->delete();
-        return redirect()->route('user.index')->with('success','Data berhasil dihapus');
+
+        return redirect()->route('user.index')->with('success', 'Data Berhasil Dihapus!');
     }
 }
